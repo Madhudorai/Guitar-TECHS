@@ -1,6 +1,6 @@
 # Guitar-TECHS
 Collab notebook for loading Guitar-TECHS: An Electric Guitar Dataset Covering Techniques, Musical Excerpts, Chords, and Scales. 
-
+https://colab.research.google.com/drive/1ykem3MaFS2XqVXz7ZniUxtqXQL0vqpK4?usp=sharing
 # About Dataset
 
 ![image](https://github.com/user-attachments/assets/050de7d4-f74d-4d23-8974-d259663f9dbc)
