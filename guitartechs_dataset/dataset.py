@@ -37,7 +37,6 @@ class GuitarTECHSDataset(Dataset):
             - 'player': Player ID (e.g., 'P1')
             - 'content_type': Type of content (e.g., 'scales')
             - 'sample': Unique sample name
-            - 'chord_type': (Optional) Chord category for chords
             - 'data': Dictionary of audio/video modalities with sliced tensors
             - 'label': Tensor of shape [6, 25, T] with note activations (string, fret, time_bin)
             - 'midi_path': Path to original MIDI file
@@ -95,18 +94,10 @@ class GuitarTECHSDataset(Dataset):
                         if fname.startswith('directinput_') and fname.endswith('.wav'):
                             # The sample identifier is based on the file name.
                             sample_value = fname.replace('directinput_', '').replace('.wav', '')
-                            chord_type = None
-                            if content.lower() == 'chords':
-                                prefix = sample_value.split('_')[0]
-                                if prefix in ['Set1', 'Set2', 'Set3', 'Set4']:
-                                    chord_type = '3-note chord'
-                                elif prefix == 'Drop3':
-                                    chord_type = '4-note chord'
                             self.index.append({
                                 'player': player,
                                 'content_type': content,
-                                'sample': sample_value,
-                                'chord_type': chord_type
+                                'sample': sample_value
                             })
 
         if self.slice_dur:
@@ -331,7 +322,6 @@ class GuitarTECHSDataset(Dataset):
             'player': item['player'],
             'content_type': item['content_type'],
             'sample': item['sample'],
-            'chord_type': item.get('chord_type'),
             'data': data,
             'label': label_tensor,
             'midi_path': midi_path,
