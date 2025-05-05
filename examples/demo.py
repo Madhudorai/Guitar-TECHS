@@ -16,7 +16,7 @@ loader = DataLoader(dataset, batch_size=4)
 batch = next(iter(loader))
 
 print("\n Batched Metadata:")
-for key in ['player', 'content_type', 'sample', 'chord_type']:
+for key in ['player', 'content_type', 'sample']:
     print(f"  {key}: {batch[key]}")
 
 print("\n Slice start/end times:")
