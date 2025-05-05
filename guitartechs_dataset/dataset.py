@@ -75,30 +75,8 @@ class GuitarTECHSDataset(Dataset):
         self.modalities = VALID_MODALITIES if modalities in ['all', ['all']] else modalities
         assert all(m in VALID_MODALITIES for m in self.modalities), \
             f"Modalities must be a subset of {VALID_MODALITIES}"
-
-        self.index = []
-
-        # Build sample index by scanning directinput files.
-        for player in self.players:
-            valid_contents = AVAILABLE_CONTENT[player]
-            selected_contents = valid_contents if content_types in ['all', ['all']] else content_types
-            for content in selected_contents:
-                if content not in valid_contents:
-                    print(f"Skipping content '{content}' for player '{player}' — not available in this player's dataset.")
-                    continue
-                # Construct the base directory. Note: folder naming uses lower-case for content.
-                base_dir = self._get_base_dir(player, content)
-                di_dir = os.path.join(base_dir, 'audio', 'directinput')
-                if os.path.exists(di_dir):
-                    for fname in os.listdir(di_dir):
-                        if fname.startswith('directinput_') and fname.endswith('.wav'):
-                            # The sample identifier is based on the file name.
-                            sample_value = fname.replace('directinput_', '').replace('.wav', '')
-                            self.index.append({
-                                'player': player,
-                                'content_type': content,
-                                'sample': sample_value
-                            })
+        self.content_types = content_types
+        self.index = self._build_index()
 
         if self.slice_dur:
           self.expanded_index = []
@@ -133,6 +111,35 @@ class GuitarTECHSDataset(Dataset):
                   start_sec = start_sample / self.sr
                   end_sec = start_sec + self.slice_dur
                   self.expanded_index.append((i, start_sec, end_sec))
+
+
+    def _build_index(self):
+        """
+        Build sample index by scanning directinput files.
+        :return: index of audio
+        """
+        local_index = []
+        for player in self.players:
+            valid_contents = AVAILABLE_CONTENT[player]
+            selected_contents = valid_contents if self.content_types in ['all', ['all']] else self.content_types
+            for content in selected_contents:
+                if content not in valid_contents:
+                    print(f"Skipping content '{content}' for player '{player}' — not available in this player's dataset.")
+                    continue
+                # Construct the base directory. Note: folder naming uses lower-case for content.
+                base_dir = self._get_base_dir(player, content)
+                di_dir = os.path.join(base_dir, 'audio', 'directinput')
+                if os.path.exists(di_dir):
+                    for fname in os.listdir(di_dir):
+                        if fname.startswith('directinput_') and fname.endswith('.wav'):
+                            # The sample identifier is based on the file name.
+                            sample_value = fname.replace('directinput_', '').replace('.wav', '')
+                            local_index.append({
+                                'player': player,
+                                'content_type': content,
+                                'sample': sample_value
+                            })
+        return local_index
 
     def _download_and_extract_dataset(self):
         """
