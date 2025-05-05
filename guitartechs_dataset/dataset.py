@@ -75,8 +75,8 @@ class GuitarTECHSDataset(Dataset):
         self.modalities = VALID_MODALITIES if modalities in ['all', ['all']] else modalities
         assert all(m in VALID_MODALITIES for m in self.modalities), \
             f"Modalities must be a subset of {VALID_MODALITIES}"
-
-        self.index = _build_index(self)
+        self.content_types = content_types
+        self.index = self._build_index()
 
         if self.slice_dur:
           self.expanded_index = []
@@ -121,7 +121,7 @@ class GuitarTECHSDataset(Dataset):
         local_index = []
         for player in self.players:
             valid_contents = AVAILABLE_CONTENT[player]
-            selected_contents = valid_contents if content_types in ['all', ['all']] else content_types
+            selected_contents = valid_contents if self.content_types in ['all', ['all']] else self.content_types
             for content in selected_contents:
                 if content not in valid_contents:
                     print(f"Skipping content '{content}' for player '{player}' — not available in this player's dataset.")
