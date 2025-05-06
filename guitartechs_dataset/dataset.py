@@ -90,28 +90,15 @@ class GuitarTECHSDataset(Dataset):
 
               duration = librosa.get_duration(path=audio_path)
               total_samples = int(duration * self.sr)
+              slice_dur = self.slice_dur
+              hop_dur = self.slice_dur - self.slice_overlap
 
-              # Load full audio
-              y, _ = librosa.load(audio_path, sr=self.sr)
+              # Compute integer-aligned start times
+              starts = np.arange(0, int(duration), hop_dur).astype(float)
 
-              slice_samples = int(self.slice_dur * self.sr)
-              overlap_samples = int(self.slice_overlap * self.sr)
-              hop_length = slice_samples - overlap_samples
-
-              # Pad the signal
-              pad_width = (slice_samples - len(y) % hop_length) % hop_length
-              y_padded = np.pad(y, (0, pad_width), mode='constant')
-
-              # Use librosa utils for slicing
-              frames = librosa.util.frame(y_padded, frame_length=slice_samples, hop_length=hop_length)
-
-              # For each frame, compute start and end time (in seconds)
-              for s in range(frames.shape[1]):
-                  start_sample = s * hop_length
-                  start_sec = start_sample / self.sr
-                  end_sec = start_sec + self.slice_dur
-                  self.expanded_index.append((i, start_sec, end_sec))
-
+              for start_sec in starts:
+                  end_sec = start_sec + slice_dur
+                  self.expanded_index.append((i, start_sec, end_sec)) #end_sec> duration is handled by slice_audio method
 
     def _build_index(self):
         """
