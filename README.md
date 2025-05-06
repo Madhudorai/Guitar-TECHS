@@ -8,13 +8,17 @@ https://colab.research.google.com/drive/1ykem3MaFS2XqVXz7ZniUxtqXQL0vqpK4?usp=sh
 For more informationn about the dataset visit https://guitar-techs.github.io/
 
 # Collab Notebook 
-Open the .ipynb in google colab. It automatically downloads the dataset from Zenodo URL and uses pytorch dataloaders to load the dataset. You can filter the dataset through 
-a) players= 'P1','P2','P3' and combinations of these
-b) content types = 'scales', 'chords','music', 'techniques', 'singlenotes' 
-c) modalities = 'directinput', 'micamp', 'exo', 'ego'
-
-Labels of note, note onset, note offset, fret, string are generated using the MIDI file, we can decide the time slice of the sample (using slice range or slice size)- so that all modalities and the corresponding labels are aligned for each sample. 
-We can hear the different modalities and look at the labels for each sample. 
+Open the .ipynb in google colab. It automatically downloads the dataset from Zenodo URL and uses a pytorch dataset to load the data. One can also pass this to a pytorch dataloader to create batches for model training. 
 
 # Citations: 
 Pedroza, Hegel, et al. "Guitar-TECHS: An Electric Guitar Dataset Covering Techniques, Musical Excerpts, Chords and Scales Using a Diverse Array of Hardware." ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP). IEEE, 2025
+
+@misc{pedroza2025guitartechselectricguitardataset,
+      title={Guitar-TECHS: An Electric Guitar Dataset Covering Techniques, Musical Excerpts, Chords and Scales Using a Diverse Array of Hardware}, 
+      author={Hegel Pedroza and Wallace Abreu and Ryan M. Corey and Iran R. Roman},
+      year={2025},
+      eprint={2501.03720},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2501.03720}, 
+}
